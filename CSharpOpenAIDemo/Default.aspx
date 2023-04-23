@@ -12,7 +12,7 @@
                 <a href='https://platform.openai.com/account/api-keys' target="_blank">Here you can create an API-Key.</a>
             </p>
             <p>
-                <asp:TextBox ID="txtAPIKey" Style="width: 99%" runat="server" MaxLength="2000"></asp:TextBox>
+                <asp:TextBox ID="txtAPIKey"  runat="server" MaxLength="2000" AutoCompleteType="None"></asp:TextBox>
             </p>
             <p>
                 <asp:LinkButton ID="lbSaveAPIKey" runat="server" CssClass="btn btn-success" OnClick="lbSaveAPIKey_Click">Save</asp:LinkButton>
@@ -25,7 +25,7 @@
         <div class="col">
             <h1>KI Text Request</h1>
             <p>
-                <asp:TextBox ID="txtTextRequest" runat="server" MaxLength="2000"></asp:TextBox><br />
+                <asp:TextBox ID="txtTextRequest" runat="server" MaxLength="2000"  AutoCompleteType="None"></asp:TextBox><br />
             </p>
             <p>
                 <asp:LinkButton ID="lbDOAI" runat="server" ToolTip="Send request..." CssClass="btn btn-success" OnClick="lbDOAIText_Click">Do it...</asp:LinkButton>
@@ -38,7 +38,7 @@
            <div class="col">
             <h1>KI Image Request</h1>
             <p>
-                <asp:TextBox ID="txtImageRequest" runat="server" MaxLength="2000"></asp:TextBox><br />
+                <asp:TextBox ID="txtImageRequest" runat="server" MaxLength="2000" AutoCompleteType="None"></asp:TextBox><br />
             </p>
             <p>
                 <asp:LinkButton ID="lbDOAIImage" runat="server" ToolTip="Send request..." CssClass="btn btn-success" OnClick="lbDOAIImage_Click">Do it...</asp:LinkButton>

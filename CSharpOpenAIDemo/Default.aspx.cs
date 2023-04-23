@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -18,6 +19,29 @@ public partial class _Default : Page
         //this.Test();
         //return;
         this.CheckAPIKey();
+    }
+
+
+    public void Test()
+    {
+        TSOpenAIAPI oTSOpenAIApi = new TSOpenAIAPI(LoadJsonKeyFile());
+        string sAnswer = oTSOpenAIApi.callOpenAI(1000, "Wann gibt es schönes Wetter?", "text-davinci-003", 0.7, 1, 0, 0);
+        this.lblTextRespsone.Text = sAnswer;
+
+
+        TSOpenAIAPI.Images oImages;
+        oImages = oTSOpenAIApi.callOpenAICreateImage("Hässliche Katze");
+
+        string sImageHTML = "";
+        foreach (TSOpenAIAPI._Data oUrl in oImages.data)
+        {
+            sImageHTML = sImageHTML + "<div class='row'>";
+            sImageHTML = sImageHTML + "<div class='col'>";
+            sImageHTML = sImageHTML + "<img src='" + oUrl.url + "'>";
+            sImageHTML = sImageHTML + "</div>";
+            sImageHTML = sImageHTML + "</div>";
+            this.lblImageResponse.Text = sImageHTML;
+        }
     }
 
     private void CheckAPIKey()
@@ -70,15 +94,10 @@ public partial class _Default : Page
         }
         catch (Exception ex)
         {
-            this.lblImageResponse.Text =  ex.Message;
+            this.lblImageResponse.Text = ex.Message;
         }
     }
 
-    public void Test()
-    {
-        JObject oJasonFile = JObject.Parse(File.ReadAllText("c:/dummy/images.json"));
-        TSOpenAIAPI.Images images = (TSOpenAIAPI.Images)JsonConvert.DeserializeObject<TSOpenAIAPI.Images>(oJasonFile.ToString());
-    }
 
 
     public void lbSaveAPIKey_Click(object sender, EventArgs e)
