@@ -15,5 +15,3 @@ Finished project source code directly to download and use yourself.
 As an enthusiastic C# developer, I always need code that others have thought about - which is then not my core topic. Now I have created a very simple project to integrate OpenAI (ChatGPT). Suggestions are welcome, you can certainly improve a lot of things, but as you know that's always the case.
 
 The project can be started and used directly. You only need an OpenAI Api key, you can get it here: https://platform.openai.com/account/api-keys
-
-Translated with www.DeepL.com/Translator (free version)
