@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Ajax.Utilities;
 using System.IO;
+using Newtonsoft.Json.Linq;
+using System.Web.UI;
 
 /// <summary>
 /// Zusammenfassungsbeschreibung für classOpenAIAPI
@@ -67,7 +69,7 @@ public class TSOpenAIAPI
     {
         var apiCall = "https://api.openai.com/v1/images/generations";
         TSOpenAIAPI.Images oImages = new Images();
-        
+
         try
         {
             using (var httpClient = new HttpClient())
@@ -82,12 +84,12 @@ public class TSOpenAIAPI
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     var response = httpClient.SendAsync(request).Result;
                     var json = response.Content.ReadAsStringAsync().Result;
-                        
+
                     oImages.Response = oImages.Response = response.ReasonPhrase;
                     if (response.ReasonPhrase == "OK")
                         oImages = (TSOpenAIAPI.Images)JsonConvert.DeserializeObject<TSOpenAIAPI.Images>(json.ToString());
-                    
-                        
+
+
 
                 }
             }
@@ -111,5 +113,33 @@ public class TSOpenAIAPI
         public string url { get; set; }
     }
 
-    
+    public static void SaveJsonKeyFile(string Key, Page oPage)
+    {
+        JObject APIKeyFile = new JObject(
+            new JProperty("Key", Key));
+
+        File.WriteAllText(oPage.Server.MapPath("/") + "/OpenAIAPIKey.json", APIKeyFile.ToString());
+
+        // write JSON directly to a file
+        using (StreamWriter file = File.CreateText(oPage.Server.MapPath("/") + "/OpenAIAPIKey.json"))
+        using (JsonTextWriter writer = new JsonTextWriter(file))
+        {
+            APIKeyFile.WriteTo(writer);
+        }
+    }
+
+    public static TSOpenAIAPI.OpenAIApiKey LoadJsonKeyFile(Page oPage)
+    {
+        TSOpenAIAPI.OpenAIApiKey oKey = null;
+        if (System.IO.File.Exists(oPage.Server.MapPath("/") + "/OpenAIAPIKey.json"))
+        {
+            JObject oJasonKey = JObject.Parse(File.ReadAllText(oPage.Server.MapPath("/") + "/OpenAIAPIKey.json"));
+            TSOpenAIAPI.OpenAIApiKey oOpenAIApiKey = new TSOpenAIAPI.OpenAIApiKey();
+            oOpenAIApiKey = JsonConvert.DeserializeObject<TSOpenAIAPI.OpenAIApiKey>(oJasonKey.ToString());
+            oKey = oOpenAIApiKey;
+        }
+        return oKey;
+    }
+
+
 }

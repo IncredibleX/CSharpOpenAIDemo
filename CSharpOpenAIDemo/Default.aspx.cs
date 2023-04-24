@@ -24,7 +24,7 @@ public partial class _Default : Page
 
     public void Test()
     {
-        TSOpenAIAPI oTSOpenAIApi = new TSOpenAIAPI(LoadJsonKeyFile());
+        TSOpenAIAPI oTSOpenAIApi = new TSOpenAIAPI(TSOpenAIAPI.LoadJsonKeyFile(this.Page));
         string sAnswer = oTSOpenAIApi.callOpenAI(1000, "Wann gibt es schönes Wetter?", "text-davinci-003", 0.7, 1, 0, 0);
         this.lblTextRespsone.Text = sAnswer;
 
@@ -46,7 +46,7 @@ public partial class _Default : Page
 
     private void CheckAPIKey()
     {
-        if (this.LoadJsonKeyFile() != null)
+        if (TSOpenAIAPI.LoadJsonKeyFile(this.Page) != null)
         {
             this.pnlAPIKey.Visible = false;
             this.pnlInput.Visible = true;
@@ -62,7 +62,7 @@ public partial class _Default : Page
 
     public void lbDOAIText_Click(object sender, EventArgs e)
     {
-        TSOpenAIAPI oTSOpenAIAPI = new TSOpenAIAPI(LoadJsonKeyFile());
+        TSOpenAIAPI oTSOpenAIAPI = new TSOpenAIAPI(TSOpenAIAPI.LoadJsonKeyFile(this.Page));
         string sAnswer = oTSOpenAIAPI.callOpenAI(1000, this.txtTextRequest.Text, "text-davinci-003", 0.7, 1, 0, 0);
         this.lblTextRespsone.Text = sAnswer;
     }
@@ -74,7 +74,7 @@ public partial class _Default : Page
             this.lblImageResponse.Text = "";
             string sRequest = "stupid man";
             if (this.txtImageRequest.Text.Trim().Length > 5) sRequest = this.txtImageRequest.Text;
-            TSOpenAIAPI oTSOpenAIAPI = new TSOpenAIAPI(LoadJsonKeyFile());
+            TSOpenAIAPI oTSOpenAIAPI = new TSOpenAIAPI(TSOpenAIAPI.LoadJsonKeyFile(this.Page));
             TSOpenAIAPI.Images oImages = oTSOpenAIAPI.callOpenAICreateImage(sRequest);
 
             string sImageHTML = "";
@@ -102,37 +102,11 @@ public partial class _Default : Page
 
     public void lbSaveAPIKey_Click(object sender, EventArgs e)
     {
-        this.SaveJsonKeyFile(txtAPIKey.Text);
+       TSOpenAIAPI.SaveJsonKeyFile(txtAPIKey.Text,this.Page);
         this.CheckAPIKey();
     }
 
-    public void SaveJsonKeyFile(string Key)
-    {
-        JObject APIKeyFile = new JObject(
-            new JProperty("Key", Key));
 
-        File.WriteAllText(Server.MapPath("/") + "/APIKey.json", APIKeyFile.ToString());
-
-        // write JSON directly to a file
-        using (StreamWriter file = File.CreateText(Server.MapPath("/") + "/APIKey.json"))
-        using (JsonTextWriter writer = new JsonTextWriter(file))
-        {
-            APIKeyFile.WriteTo(writer);
-        }
-    }
-
-    public TSOpenAIAPI.OpenAIApiKey LoadJsonKeyFile()
-    {
-        TSOpenAIAPI.OpenAIApiKey oKey = null;
-        if (System.IO.File.Exists(Server.MapPath("/") + "/APIKey.json"))
-        {
-            JObject oJasonKey = JObject.Parse(File.ReadAllText(Server.MapPath("/") + "/APIKey.json"));
-            TSOpenAIAPI.OpenAIApiKey oOpenAIApiKey = new TSOpenAIAPI.OpenAIApiKey();
-            oOpenAIApiKey = JsonConvert.DeserializeObject<TSOpenAIAPI.OpenAIApiKey>(oJasonKey.ToString());
-            oKey = oOpenAIApiKey;
-        }
-        return oKey;
-    }
 
 
 }
